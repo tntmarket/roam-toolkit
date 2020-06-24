@@ -10,7 +10,7 @@ export const Selectors = {
     mainPanel: '.roam-body-main',
 
     sidebarContent: '#roam-right-sidebar-content',
-    sidebarPage: '#right-sidebar > div',
+    sidebarPage: `#roam-right-sidebar-content > div`,
     sidebar: '#right-sidebar',
 
     leftPanel: '.roam-sidebar-container',
