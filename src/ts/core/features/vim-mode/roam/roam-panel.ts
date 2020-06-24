@@ -26,7 +26,7 @@ type PanelIndex = number
 type PanelElement = HTMLElement
 
 const PANEL_CSS_CLASS = 'roam-toolkit--panel'
-const PANEL_SELECTOR = `.${PANEL_CSS_CLASS}, ${Selectors.sidebarContent}`
+const PANEL_SELECTOR = `.${PANEL_CSS_CLASS}, ${Selectors.sidebarPage}`
 
 /**
  * A "Panel" is a viewport that contains blocks. For now, there is just
