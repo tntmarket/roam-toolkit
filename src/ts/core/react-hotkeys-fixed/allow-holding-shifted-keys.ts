@@ -1,4 +1,3 @@
-// A "KeySequence" is a series of key chords, such as "g g" or "control+w j"
 import {KEY_TO_UNSHIFTED} from 'src/core/common/keycodes'
 
 import {KeyChord, KeySequence} from './hotkey'
