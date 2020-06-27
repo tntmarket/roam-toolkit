@@ -2,16 +2,16 @@ import {assumeExists} from 'src/core/common/assert'
 
 type DisconnectFn = () => void
 
-export const onSelectorChange = (selector: string, handleChange: () => void): DisconnectFn =>
+export const onSelectorChange = (selector: string, handleChange: (changedElement: HTMLElement) => void): DisconnectFn =>
     observeElement(assumeExists(document.querySelector(selector)) as HTMLElement, handleChange)
 
 const observeElement = (
     observeInside: HTMLElement,
-    handleChange: () => void,
+    handleChange: (changedElement: HTMLElement) => void,
     observeChildren: boolean = false
 ): DisconnectFn => {
-    const waitForLoad = new MutationObserver(() => {
-        handleChange()
+    const waitForLoad = new MutationObserver(mutations => {
+        handleChange(mutations[0].target as HTMLElement)
     })
 
     waitForLoad.observe(observeInside, {
@@ -23,16 +23,16 @@ const observeElement = (
     return () => waitForLoad.disconnect()
 }
 
-export const waitForSelectorToExist = (selector: string) => {
-    if (document.body.querySelector(selector)) {
+export const waitForSelectorToExist = (selector: string, observeInside: HTMLElement = document.body) => {
+    if (observeInside.querySelector(selector)) {
         return Promise.resolve()
     }
 
     return new Promise(resolve => {
         const disconnect = observeElement(
-            document.body,
+            observeInside,
             () => {
-                if (document.querySelector(selector)) {
+                if (observeInside.querySelector(selector)) {
                     disconnect()
                     resolve()
                 }
