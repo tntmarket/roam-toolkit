@@ -4,10 +4,11 @@ import {Dictionary} from 'lodash'
  * Given two dictionaries with the same keys, returns a new object with tuples of
  * the two values for each key
  */
-export const zipObjects = <X, Y>(xs: Dictionary<X>, ys: Dictionary<Y>): Dictionary<[X, Y]> => {
-    const keyToXY: Dictionary<[X, Y]> = {}
-    Object.keys(xs).forEach(key => {
-        keyToXY[key] = [xs[key], ys[key]]
-    })
-    return keyToXY
-}
+export const zipObjects = <X, Y>(xs: Dictionary<X>, ys: Dictionary<Y>): Dictionary<[X, Y]> =>
+    Object.keys(xs).reduce(
+        (keyToXY, key) => ({
+            ...keyToXY,
+            [key]: [xs[key], ys[key]],
+        }),
+        {}
+    )
