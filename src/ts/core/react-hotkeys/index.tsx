@@ -1,12 +1,13 @@
 import React from 'react'
 import {configure} from 'react-hotkeys'
-import {Dictionary} from 'lodash'
+import {Dictionary, mapValues, pickBy} from 'lodash'
 
 import {CODE_TO_KEY} from 'src/core/common/keycodes'
 
-import {Handler, KeySequence} from './hotkey'
-import {Hotkeys} from './hotkeys'
+import {adaptHandlerToReactHotkeys, Handler} from './key-handler'
 import {GlobalHotKeysWithoutConflictingWithNativeHotkeys} from './dont-override-native-hotkeys'
+import {KeySequence, KeySequenceString} from 'src/core/react-hotkeys/key-sequence'
+import {zipObjects} from 'src/core/common/object'
 
 configure({
     ignoreTags: [],
@@ -49,7 +50,7 @@ configure({
 })
 
 type Props = {
-    keyMap: Dictionary<KeySequence>
+    keyMap: Dictionary<KeySequenceString>
     handlers: Dictionary<Handler>
 }
 
@@ -71,20 +72,31 @@ export const ReactHotkeysFixed = ({keyMap, handlers}: Props) => {
      * Workaround by separating sequences and single chords into different react components:
      * https://github.com/greena13/react-hotkeys/issues/219#issuecomment-540680435
      */
-    const hotkeys = Hotkeys.fromKeyMapAndHandlers(keyMap, handlers)
-    const singleChordHotkeys = hotkeys.singleChordHotkeys()
-    const multiChordHotkeys = hotkeys.multiChordHotkeys()
+    const hotkeys: Dictionary<Hotkey> = mapValues(
+        zipObjects(keyMap, handlers),
+        ([keySequenceString, handler]): Hotkey => [KeySequence.fromString(keySequenceString), handler]
+    )
+
+    const singleChordHotkeys = pickBy(hotkeys, usesOneKeyChord)
+    const multiChordHotkeys = pickBy(hotkeys, usesMultipleKeyChords)
 
     return (
         <>
             <GlobalHotKeysWithoutConflictingWithNativeHotkeys
-                keyMap={singleChordHotkeys.actionToKeySequence()}
-                handlers={singleChordHotkeys.actionToHandler()}
+                keyMap={mapValues(singleChordHotkeys, toKeySequence)}
+                handlers={mapValues(singleChordHotkeys, toHandler)}
             />
             <GlobalHotKeysWithoutConflictingWithNativeHotkeys
-                keyMap={multiChordHotkeys.actionToKeySequence()}
-                handlers={multiChordHotkeys.actionToHandler()}
+                keyMap={mapValues(multiChordHotkeys, toKeySequence)}
+                handlers={mapValues(multiChordHotkeys, toHandler)}
             />
         </>
     )
 }
+
+type Hotkey = [KeySequence, Handler]
+
+const usesMultipleKeyChords = ([keySequence]: Hotkey) => keySequence.usesMultipleKeyChords()
+const usesOneKeyChord = ([keySequence]: Hotkey) => !keySequence.usesMultipleKeyChords()
+const toKeySequence = ([keySequence]: Hotkey) => keySequence.toMouseTrapSyntax()
+const toHandler = ([keySequence, handler]: Hotkey) => adaptHandlerToReactHotkeys(keySequence, handler)

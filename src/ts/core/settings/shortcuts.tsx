@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {ReactHotkeysFixed} from 'src/core/common/react-hotkeys-fixed'
+import {ReactHotkeysFixed} from 'src/core/react-hotkeys'
 import {Features} from 'src/core/features'
 
 const shortcutContainer = document.createElement('div')

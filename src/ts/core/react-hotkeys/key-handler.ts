@@ -1,13 +1,13 @@
-import {Handler, Key, KeyChord, KeySequence} from './hotkey'
+// @ts-ignore this internal import is needed to workaround a react-hotkeys issue
+import {KeySequence} from './key-sequence'
+import {clearKeyPressesAfterFinishingKeySequence} from 'src/core/react-hotkeys/key-history'
 
 /**
- * These keys should not trigger other handlers in the middle of an existing handler.
- * Allow the others to run concurrently though, so the UI feels more responsive.
+ * A "Handler" is function to run in response to a keypress.
+ * It may return a promise to indicate that the function is asynchronous, and
+ * takes time to finish.
  */
-const KEYS_THAT_WE_ALSO_SIMULATE: Key[] = ['Escape']
-
-const keyChordMightBeSimulated = (keyChord: KeyChord) =>
-    KEYS_THAT_WE_ALSO_SIMULATE.some(key => keyChord.includes(key))
+export type Handler = (event: KeyboardEvent) => Promise<any> | undefined
 
 let executingHandler = 0
 
@@ -39,11 +39,17 @@ const trackIfHandlerIsExecuting = (handler: Handler): Handler => async (event: K
  * @return a decorated version of a handler that does nothing if other
  *         handlers are running
  */
-export const dontTriggerWhenKeyPressIsSimulated = (keySequence: KeySequence, handler: Handler): Handler => {
-    if (keyChordMightBeSimulated(keySequence)) {
+const dontTriggerWhenKeyPressIsSimulated = (keySequence: KeySequence, handler: Handler): Handler => {
+    if (keySequence.mightBeSimulated()) {
         return preventWhileOtherHandlersAreExecuting(handler)
     } else {
         return trackIfHandlerIsExecuting(handler)
     }
 }
 
+export const adaptHandlerToReactHotkeys = (keySequence: KeySequence, handler: Handler) => {
+    if (keySequence.usesMultipleKeyChords()) {
+        handler = clearKeyPressesAfterFinishingKeySequence(handler)
+    }
+    return dontTriggerWhenKeyPressIsSimulated(keySequence, handler)
+}
