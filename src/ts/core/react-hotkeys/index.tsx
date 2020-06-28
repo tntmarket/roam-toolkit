@@ -63,7 +63,7 @@ type Props = {
  * See https://github.com/roam-unofficial/roam-toolkit/issues/68
  * for discussion around alternatives to react-hotkeys.
  */
-export const ReactHotkeysFixed = ({keyMap, handlers}: Props) => {
+export const ReactHotkeys = ({keyMap, handlers}: Props) => {
     /**
      * Key sequences like 'g g' mess up the other shortcuts
      * See https://github.com/greena13/react-hotkeys/issues/229

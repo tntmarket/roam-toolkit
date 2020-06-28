@@ -1,14 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import {ReactHotkeysFixed} from 'src/core/react-hotkeys'
+import {ReactHotkeys} from 'src/core/react-hotkeys'
 import {Features} from 'src/core/features'
 
 const shortcutContainer = document.createElement('div')
 
 export async function updateShortcuts() {
     const shortcutElement = (
-        <ReactHotkeysFixed
+        <ReactHotkeys
             keyMap={await Features.getCurrentKeyMap()}
             handlers={Features.getShortcutHandlers()}
         />
