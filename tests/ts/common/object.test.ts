@@ -8,10 +8,15 @@ describe(zipObjects, () => {
         })
     })
 
+    it('only includes keys from the first object', async () => {
+        expect(zipObjects({a: 1}, {a: '1', b: '2'})).toEqual({
+            a: [1, '1'],
+        })
+    })
+
     it('uses undefined when there is no matching key', async () => {
         expect(zipObjects({a: 1}, {b: 2})).toEqual({
             a: [1, undefined],
-            b: [undefined, 2],
         })
     })
 })
