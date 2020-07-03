@@ -5,33 +5,30 @@ import {delay} from 'src/core/common/async'
 
 jest.mock('src/core/react-hotkeys/key-history')
 
-describe("Triggering hotkeys both when they're held and initially pressed", () => {
-    const fixKeySequence = (keySequenceString: KeySequenceString) =>
-        KeySequence.fromString(keySequenceString).toMouseTrapSyntax()
-
-    it('includes both capital letters and their shifted version', () => {
-        expect(fixKeySequence('G')).toEqual(['G', 'shift+g'])
+describe("Using a capital letter as shorthand for a shifted key", () => {
+    it('converts capital letters to their shifted version', () => {
+        expect(KeySequence.fromString('G').toMouseTrapSyntax()).toEqual('shift+g')
     })
 
     it('leaves lower case letters alone', () => {
-        expect(fixKeySequence('g')).toEqual(['g'])
+        expect(KeySequence.fromString('g').toMouseTrapSyntax()).toEqual('g')
     })
 })
 
 describe('Normalizing key chords to have a consistent format', () => {
-    const fixKeyChord = (keyChordString: KeyChordString) =>
+    const normalizeChord = (keyChordString: KeyChordString) =>
         KeyChord.fromString(keyChordString).convertCapitalToShiftAndLowercase().toString()
 
     it('Lower cases the letter and adds shift', () => {
-        expect(fixKeyChord('G')).toEqual('shift+g')
+        expect(normalizeChord('G')).toEqual('shift+g')
     })
 
     it('keeps the other modifiers while adding shift', () => {
-        expect(fixKeyChord('alt+G')).toEqual('alt+shift+g')
+        expect(normalizeChord('alt+G')).toEqual('alt+shift+g')
     })
 
     it('leaves lowercase letters alone', () => {
-        expect(fixKeyChord('g')).toEqual('g')
+        expect(normalizeChord('g')).toEqual('g')
     })
 })
 

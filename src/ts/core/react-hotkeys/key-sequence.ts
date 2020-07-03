@@ -40,23 +40,15 @@ export class KeySequence {
      * @return a list of key sequence strings, in Mousetrap style:
      *         https://github.com/greena13/react-hotkeys#defining-key-maps
      */
-    toMouseTrapSyntax(): KeySequenceString[] {
-        return this.keySequencesForBothHeldAndInitialPress().map(keySequence => keySequence.toString())
+    toMouseTrapSyntax(): KeySequenceString {
+        return this.convertCapitalToShiftAndLowercase().toString()
     }
 
     /**
-     * Pressing down "shift+j" triggers "shift+j", but _holding_ it down triggers _just_ "J".
-     * Binding just "J" should trigger the action in both cases.
-     *
-     * @return a list of alternative key sequences that should all trigger the same handler
+     * Binding just "J" should trigger "shift+j"
      */
-    private keySequencesForBothHeldAndInitialPress(): KeySequence[] {
-        const keyChord = this.keyChords[0]
-        if (keyChord.isCapitalLetter() && !this.usesMultipleKeyChords()) {
-            return [this, this.map(keyChord => keyChord.convertCapitalToShiftAndLowercase())]
-        }
-
-        return [this.map(keyChord => keyChord.convertCapitalToShiftAndLowercase())]
+    private convertCapitalToShiftAndLowercase(): KeySequence {
+        return this.map(keyChord => keyChord.convertCapitalToShiftAndLowercase())
     }
 
     static fromString(keySequenceString: KeySequenceString) {

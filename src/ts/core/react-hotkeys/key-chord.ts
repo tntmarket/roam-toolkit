@@ -18,10 +18,6 @@ export class KeyChord {
         this.modifiers = modifiers
     }
 
-    isCapitalLetter(): string | undefined {
-        return KEY_TO_UNSHIFTED[this.key]
-    }
-
     /**
      * Converts a shifted character to it's non-shifted character, plus the shift key
      *
@@ -34,7 +30,7 @@ export class KeyChord {
      *         the key is already lowercase
      */
     convertCapitalToShiftAndLowercase(): KeyChord {
-        const unshifted = this.isCapitalLetter()
+        const unshifted = KEY_TO_UNSHIFTED[this.key]
         if (unshifted) {
             return new KeyChord(unshifted, this.modifiers.add('shift'))
         }
