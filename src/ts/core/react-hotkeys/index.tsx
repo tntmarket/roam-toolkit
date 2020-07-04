@@ -4,10 +4,11 @@ import {Dictionary, mapValues, pickBy} from 'lodash'
 
 import {CODE_TO_KEY} from 'src/core/common/keycodes'
 
-import {adaptHandlerToReactHotkeys, Handler} from './key-handler'
+import {blockConcurrentHandlingOfSimulatedKeys, Handler} from './key-handler'
 import {GlobalHotKeysWithoutConflictingWithNativeHotkeys} from './dont-override-native-hotkeys'
 import {KeySequence, KeySequenceString} from 'src/core/react-hotkeys/key-sequence'
 import {zipObjects} from 'src/core/common/object'
+import {clearKeyPressesAfterFinishingKeySequence} from 'src/core/react-hotkeys/key-history'
 
 configure({
     ignoreTags: [],
@@ -99,4 +100,5 @@ type Hotkey = [KeySequence, Handler]
 const usesMultipleKeyChords = ([keySequence]: Hotkey) => keySequence.usesMultipleKeyChords()
 const usesOneKeyChord = ([keySequence]: Hotkey) => !keySequence.usesMultipleKeyChords()
 const toKeySequence = ([keySequence]: Hotkey) => keySequence.toMouseTrapSyntax()
-const toHandler = ([keySequence, handler]: Hotkey) => adaptHandlerToReactHotkeys(keySequence, handler)
+const toHandler = ([keySequence, handler]: Hotkey) =>
+    blockConcurrentHandlingOfSimulatedKeys(keySequence, clearKeyPressesAfterFinishingKeySequence(keySequence, handler))

@@ -1,6 +1,5 @@
 // @ts-ignore this internal import is needed to workaround a react-hotkeys issue
 import {KeySequence} from './key-sequence'
-import {clearKeyPressesAfterFinishingKeySequence} from 'src/core/react-hotkeys/key-history'
 
 /**
  * A "Handler" is function to run in response to a keypress.
@@ -11,15 +10,15 @@ export type Handler = (event: KeyboardEvent) => Promise<any> | undefined
 
 let executingHandler = 0
 
-const preventWhileOtherHandlersAreExecuting = (handler: Handler): Handler => {
+const blockConcurrentHandling = (handler: Handler): Handler => {
     return async (event: KeyboardEvent) => {
         if (executingHandler === 0) {
-            await trackIfHandlerIsExecuting(handler)(event)
+            await trackWhetherExecuting(handler)(event)
         }
     }
 }
 
-const trackIfHandlerIsExecuting = (handler: Handler): Handler => async (event: KeyboardEvent) => {
+const trackWhetherExecuting = (handler: Handler): Handler => async (event: KeyboardEvent) => {
     executingHandler += 1
     try {
         await handler(event)
@@ -36,20 +35,18 @@ const trackIfHandlerIsExecuting = (handler: Handler): Handler => async (event: K
  * For example, simulating "Esc" to unfocus a block should not trigger
  * our own hotkey for "Esc".
  *
+ * To do this, we keep track when handlers execute, and refuse to do anything
+ * if a simulated handler runs in the middle of another handler.
+ *
+ * See test case for examples.
+ *
  * @return a decorated version of a handler that does nothing if other
  *         handlers are running
  */
-const dontTriggerWhenKeyPressIsSimulated = (keySequence: KeySequence, handler: Handler): Handler => {
+export const blockConcurrentHandlingOfSimulatedKeys = (keySequence: KeySequence, handler: Handler): Handler => {
     if (keySequence.mightBeSimulated()) {
-        return preventWhileOtherHandlersAreExecuting(handler)
+        return blockConcurrentHandling(handler)
     } else {
-        return trackIfHandlerIsExecuting(handler)
+        return trackWhetherExecuting(handler)
     }
-}
-
-export const adaptHandlerToReactHotkeys = (keySequence: KeySequence, handler: Handler) => {
-    if (keySequence.usesMultipleKeyChords()) {
-        handler = clearKeyPressesAfterFinishingKeySequence(handler)
-    }
-    return dontTriggerWhenKeyPressIsSimulated(keySequence, handler)
 }

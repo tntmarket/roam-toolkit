@@ -1,6 +1,6 @@
 import {KeyChord, KeyChordString} from 'src/core/react-hotkeys/key-chord'
 import {KeySequence, KeySequenceString} from 'src/core/react-hotkeys/key-sequence'
-import {adaptHandlerToReactHotkeys, Handler} from 'src/core/react-hotkeys/key-handler'
+import {blockConcurrentHandlingOfSimulatedKeys, Handler} from 'src/core/react-hotkeys/key-handler'
 import {delay} from 'src/core/common/async'
 
 jest.mock('src/core/react-hotkeys/key-history')
@@ -34,7 +34,7 @@ describe('Normalizing key chords to have a consistent format', () => {
 
 describe('Not recursively triggering our own hotkeys when simulating keys for native actions', () => {
     const adaptHandler = (keySequenceString: KeySequenceString, handler: Handler): Handler =>
-        adaptHandlerToReactHotkeys(KeySequence.fromString(keySequenceString), handler)
+        blockConcurrentHandlingOfSimulatedKeys(KeySequence.fromString(keySequenceString), handler)
 
     it('lets handlers trigger when no other handler is running', () => {
         const ourCustomEscapeHotkey = jest.fn()
