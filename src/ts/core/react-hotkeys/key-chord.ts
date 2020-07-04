@@ -1,5 +1,4 @@
 import {Set} from 'immutable'
-import {KEY_TO_UNSHIFTED} from 'src/core/common/keycodes'
 
 export type KeyChordString = string
 
@@ -16,25 +15,6 @@ export class KeyChord {
     constructor(key: string, modifiers: Set<Modifier>) {
         this.key = key
         this.modifiers = modifiers
-    }
-
-    /**
-     * Converts a shifted character to it's non-shifted character, plus the shift key
-     *
-     * Examples:
-     * - D => shift+D
-     * - alt+D => alt+shift+D
-     * - d => d
-     *
-     * @return the keychord with capitals converted to shift+lowercase, or null if
-     *         the key is already lowercase
-     */
-    convertCapitalToShiftAndLowercase(): KeyChord {
-        const unshifted = KEY_TO_UNSHIFTED[this.key]
-        if (unshifted) {
-            return new KeyChord(unshifted, this.modifiers.add('shift'))
-        }
-        return this
     }
 
     toString(): string {

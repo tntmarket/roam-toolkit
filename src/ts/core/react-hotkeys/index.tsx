@@ -99,6 +99,6 @@ type Hotkey = [KeySequence, Handler]
 
 const usesMultipleKeyChords = ([keySequence]: Hotkey) => keySequence.usesMultipleKeyChords()
 const usesOneKeyChord = ([keySequence]: Hotkey) => !keySequence.usesMultipleKeyChords()
-const toKeySequence = ([keySequence]: Hotkey) => keySequence.toMouseTrapSyntax()
+const toKeySequence = ([keySequence]: Hotkey) => keySequence.toString()
 const toHandler = ([keySequence, handler]: Hotkey) =>
     blockConcurrentHandlingOfSimulatedKeys(keySequence, clearKeyPressesAfterFinishingKeySequence(keySequence, handler))

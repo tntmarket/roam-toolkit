@@ -5,30 +5,12 @@ import {delay} from 'src/core/common/async'
 
 jest.mock('src/core/react-hotkeys/key-history')
 
-describe("Using a capital letter as shorthand for a shifted key", () => {
-    it('converts capital letters to their shifted version', () => {
-        expect(KeySequence.fromString('G').toMouseTrapSyntax()).toEqual('shift+g')
-    })
-
-    it('leaves lower case letters alone', () => {
-        expect(KeySequence.fromString('g').toMouseTrapSyntax()).toEqual('g')
-    })
-})
-
 describe('Normalizing key chords to have a consistent format', () => {
     const normalizeChord = (keyChordString: KeyChordString) =>
-        KeyChord.fromString(keyChordString).convertCapitalToShiftAndLowercase().toString()
+        KeyChord.fromString(keyChordString).toString()
 
     it('Lower cases the letter and adds shift', () => {
-        expect(normalizeChord('G')).toEqual('shift+g')
-    })
-
-    it('keeps the other modifiers while adding shift', () => {
-        expect(normalizeChord('alt+G')).toEqual('alt+shift+g')
-    })
-
-    it('leaves lowercase letters alone', () => {
-        expect(normalizeChord('g')).toEqual('g')
+        expect(normalizeChord('sHiFt+g')).toEqual('shift+g')
     })
 })
 

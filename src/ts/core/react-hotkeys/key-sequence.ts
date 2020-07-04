@@ -28,27 +28,16 @@ export class KeySequence {
         return KEYS_THAT_WE_ALSO_SIMULATE.includes(this.toString())
     }
 
+    /**
+     * @return a list of key sequence strings, in Mousetrap style:
+     *         https://github.com/greena13/react-hotkeys#defining-key-maps
+     */
     toString(): string {
         return this.keyChords.join(' ')
     }
 
     map(mapFn: (keyChord: KeyChord) => KeyChord): KeySequence {
         return new KeySequence(this.keyChords.map(mapFn))
-    }
-
-    /**
-     * @return a list of key sequence strings, in Mousetrap style:
-     *         https://github.com/greena13/react-hotkeys#defining-key-maps
-     */
-    toMouseTrapSyntax(): KeySequenceString {
-        return this.convertCapitalToShiftAndLowercase().toString()
-    }
-
-    /**
-     * Binding just "J" should trigger "shift+j"
-     */
-    private convertCapitalToShiftAndLowercase(): KeySequence {
-        return this.map(keyChord => keyChord.convertCapitalToShiftAndLowercase())
     }
 
     static fromString(keySequenceString: KeySequenceString) {
