@@ -15,6 +15,7 @@ export const clearKeyPressesAfterFinishingKeySequence = (keySequence: KeySequenc
     if (keySequence.usesMultipleKeyChords()) {
         return async event => {
             await handler(event)
+            console.warn(`Clearing react-hotkeys history after sequence ${keySequence.toString()}`);
             KeyEventManager.getInstance()._clearKeyHistory()
         }
     }
