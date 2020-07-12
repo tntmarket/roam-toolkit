@@ -1,7 +1,7 @@
-import {withDate} from '../roam/date/withDate'
-import {RoamNode, Selection} from '../roam/roam-node'
+import {NodeWithDate} from '../roam/date/withDate'
+import {Selection} from '../roam/roam-node'
 
-export class SM2Node extends withDate(RoamNode) {
+export class SM2Node extends NodeWithDate {
     constructor(text: string, selection: Selection = new Selection()) {
         super(text, selection)
     }
