@@ -24,7 +24,6 @@ export function rescheduleCurrentNote(signal: SRSSignal) {
     Roam.applyToCurrent(node => scheduler.schedule(new SM2Node(node.text, node.selection), signal))
 }
 
-
 const intervalStyle = (interval: string, nextReviewTip: string) => {
     return `
         [data-link-title^="[[interval]]:${interval}"] ~ [data-link-title]:last-child::before {
@@ -59,10 +58,10 @@ injectStyle(
     ${intervalStyle('', '1+ month')}
     ${intervalStyle('1.', '1 day')}
     ${range(2, 6)
-        .map(days => intervalStyle(`${days}.`, `${days} days`))
+        .map(days => intervalStyle(`${days}.`, `${days + 1} days`))
         .join('\n')}
     ${range(7, 30)
-        .map(days => intervalStyle(`${days}.`, `${Math.floor(days / 7)} weeks`))
+        .map(days => intervalStyle(`${days}.`, `${Math.ceil(days / 7)} weeks`))
         .join('\n')}
     ${easeStyle('', 'darkgreen', 'honeydew')}
     ${easeStyle('1.', 'darkred', 'mistyrose')}
