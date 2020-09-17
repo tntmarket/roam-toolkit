@@ -16,7 +16,7 @@ export class SM2Node extends NodeWithDate {
     withInterval(interval: number): SM2Node {
         // Discarding the fractional part for display purposes/and so we don't get infinite number of intervals
         // Should potentially reconsider this later
-        return this.withInlineProperty(this.intervalProperty, Number(interval).toFixed(1))
+        return this.withInlineProperty(this.intervalProperty, Number(interval).toFixed(1), true)
     }
 
     get factor(): number | undefined {

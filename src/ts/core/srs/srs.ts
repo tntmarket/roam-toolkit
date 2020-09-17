@@ -27,7 +27,7 @@ export function rescheduleCurrentNote(signal: SRSSignal) {
 const intervalStyle = (interval: string, nextReviewTip: string) => {
     return `
         [data-link-title^="[[interval]]:${interval}"] ~ [data-link-title]:last-child::before {
-            content: "review interval: ${nextReviewTip}";
+            content: "${nextReviewTip}";
         }
     `
 }
@@ -50,10 +50,13 @@ injectStyle(
     [data-link-title^="[[factor]]:"] ~ [data-link-title]:last-child::before {
         font-style: italic;
         margin-right: 6px;
+        margin-left: -7px;
         padding: 3px 6px;
-        border-radius: 12px;
+        border-radius: 6px;
         font-size: smaller;
         white-space: nowrap;
+        position: relative;
+        top: -1px;
     }
     ${intervalStyle('', '1+ month')}
     ${intervalStyle('1.', '1 day')}
