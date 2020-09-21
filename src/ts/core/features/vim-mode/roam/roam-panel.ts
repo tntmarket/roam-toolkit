@@ -1,4 +1,4 @@
-import {clamp, findLast, last} from 'lodash'
+import {clamp, findLast, last, reverse} from 'lodash'
 
 import {Selectors} from 'src/core/roam/selectors'
 import {assumeExists} from 'src/core/common/assert'
@@ -127,7 +127,10 @@ export class RoamPanel {
             state.lastFocusedSidebarPanel = state.focusedPanel
         }
         state.focusedPanel = state.panelOrder.indexOf(this.element)
-        this.element.scrollIntoView()
+        this.element.scrollIntoView({
+            block: 'end',
+            inline: 'end',
+        })
     }
 
     static selected(): RoamPanel {
@@ -163,7 +166,8 @@ export class RoamPanel {
 
     static updateSidePanels() {
         tagPanels()
-        state.panelOrder = Array.from(document.querySelectorAll(PANEL_SELECTOR)) as PanelElement[]
+        const sidebarPanels = reverse(Array.from(document.querySelectorAll(Selectors.sidebarPage)))
+        state.panelOrder = [document.querySelector(PANEL_SELECTOR)].concat(sidebarPanels) as PanelElement[]
         state.panels = new Map(state.panelOrder.map(id => [id, RoamPanel.get(id)]))
     }
 
