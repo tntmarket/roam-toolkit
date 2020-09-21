@@ -48,15 +48,15 @@ injectStyle(
         display: none;
     }
     [data-link-title^="[[factor]]:"] ~ [data-link-title]:last-child::before {
-        font-style: italic;
-        margin-right: 6px;
-        margin-left: -7px;
-        padding: 3px 6px;
-        border-radius: 6px;
-        font-size: smaller;
-        white-space: nowrap;
-        position: relative;
-        top: -1px;
+            font-style: italic;
+            margin-right: 6px;
+            margin-left: -7px;
+            padding: 1px 3px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            position: relative;
+            top: -1px;
     }
     ${intervalStyle('', '1+ month')}
     ${intervalStyle('1.', '1 day')}
@@ -67,8 +67,8 @@ injectStyle(
         .map(days => intervalStyle(`${days}.`, `${Math.ceil(days / 7)} weeks`))
         .join('\n')}
     ${easeStyle('', 'darkgreen', 'honeydew')}
-    ${easeStyle('1.', 'darkred', 'mistyrose')}
-    ${easeStyle('2.', 'mediumblue', 'lightcyan')}
+    ${easeStyle('1.', '#ff5932', '#ff593226')}
+    ${easeStyle('2.', '#9194ff', '#b2b4ff24')}
     `,
     'roam-toolkit--srs'
 )
