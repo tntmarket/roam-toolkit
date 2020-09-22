@@ -1,4 +1,4 @@
-import {clamp, findLast, last, reverse} from 'lodash'
+import {clamp, findLast, last} from 'lodash'
 
 import {Selectors} from 'src/core/roam/selectors'
 import {assumeExists} from 'src/core/common/assert'
@@ -10,6 +10,7 @@ type BlockNavigationState = {
     panels: Map<PanelId, RoamPanel>
     focusedPanel: PanelIndex
     lastFocusedSidebarPanel: PanelIndex
+    previouslySelectedBlocks: Set<BlockId>
 }
 
 const state: BlockNavigationState = {
@@ -17,6 +18,7 @@ const state: BlockNavigationState = {
     panels: new Map(),
     focusedPanel: 0,
     lastFocusedSidebarPanel: 1,
+    previouslySelectedBlocks: new Set(),
 }
 
 /**
@@ -165,15 +167,15 @@ export class RoamPanel {
 
     static updateSidePanels() {
         tagPanels()
-        const sidebarPanels = reverse(Array.from(document.querySelectorAll(Selectors.sidebarPage)))
-        state.panelOrder = [document.querySelector(PANEL_SELECTOR)].concat(sidebarPanels) as PanelElement[]
+        state.panelOrder = Array.from(document.querySelectorAll(PANEL_SELECTOR)) as PanelElement[]
         state.panels = new Map(state.panelOrder.map(id => [id, RoamPanel.get(id)]))
     }
 
     private static get(panelId: PanelId): RoamPanel {
         // lazily create one if doesn't already exist
         if (!state.panels.has(panelId)) {
-            state.panels.set(panelId, new RoamPanel(panelId))
+            const panel = new RoamPanel(panelId)
+            state.panels.set(panelId, panel)
         }
         return assumeExists(state.panels.get(panelId))
     }
