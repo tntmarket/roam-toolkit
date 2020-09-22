@@ -128,7 +128,6 @@ export class RoamPanel {
         }
         state.focusedPanel = state.panelOrder.indexOf(this.element)
         this.element.scrollIntoView({
-            block: 'end',
             inline: 'end',
         })
     }
