@@ -51,9 +51,9 @@ injectStyle(
             font-style: italic;
             margin-right: 6px;
             margin-left: -7px;
-            padding: 1px 3px;
+            padding: 2px 4px;
             border-radius: 4px;
-            font-size: 10px;
+            font-size: 14px;
             white-space: nowrap;
             position: relative;
             top: -1px;
