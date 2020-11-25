@@ -66,7 +66,7 @@ injectStyle(
     ${range(7, 30)
         .map(days => intervalStyle(`${days}.`, `${Math.ceil(days / 7)} weeks`))
         .join('\n')}
-    ${easeStyle('', 'darkgreen', 'honeydew')}
+    ${easeStyle('', '#81bd81', '#a6ffc126')}
     ${easeStyle('1.', '#ff5932', '#ff593226')}
     ${easeStyle('2.', '#9194ff', '#b2b4ff24')}
     `,
